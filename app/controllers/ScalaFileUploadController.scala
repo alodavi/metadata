@@ -18,7 +18,7 @@ class ScalaFileUploadController @Inject()(cc: ControllerComponents) extends Abst
   def upload = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
 
-      // only get the last part of the filename
+      // only get the last part of the filename..
       // otherwise someone can send a path like ../../home/foo/bar.txt to write to other files on the system
       val uploadPath = new java.io.File(".").getCanonicalPath
       val uploadFolder = "/public/uploads/"
