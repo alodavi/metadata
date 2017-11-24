@@ -1,5 +1,6 @@
 package controllers
 
+import java.io.File
 import java.nio.file.Paths
 import javax.inject.Inject
 
@@ -8,10 +9,7 @@ import play.api.mvc.{AbstractController, ControllerComponents}
 class ScalaFileUploadController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
 
   def index = Action {
-    val uploadPath = new java.io.File(".").getCanonicalPath
-
-    //    Ok(views.html.metadata())
-    Ok(uploadPath)
+    Ok(views.html.metadata())
   }
 
   def upload = Action(parse.multipartFormData) { request =>
@@ -23,7 +21,9 @@ class ScalaFileUploadController @Inject()(cc: ControllerComponents) extends Abst
       val uploadFolder = "/public/uploads/"
       val filename = Paths.get(picture.filename).getFileName
 
-      picture.ref.moveTo(Paths.get(s"/tmp/picture/$filename"), replace = true)
+//      picture.ref.moveTo(Paths.get(s"/tmp/picture/$filename"), replace = true)
+      picture.ref.moveTo(new File(uploadPath+ uploadFolder + picture.filename), replace = true)
+
       Ok("File uploaded")
     }.getOrElse {
       Redirect(routes.ScalaFileUploadController.upload()).flashing(
