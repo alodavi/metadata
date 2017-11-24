@@ -6,6 +6,9 @@ import javax.inject.Inject
 
 import play.api.mvc.{AbstractController, ControllerComponents}
 
+
+
+
 class ScalaFileUploadController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
 
   def index = Action {
@@ -21,14 +24,24 @@ class ScalaFileUploadController @Inject()(cc: ControllerComponents) extends Abst
       val uploadFolder = "/public/uploads/"
       val filename = Paths.get(picture.filename).getFileName
 
-//      picture.ref.moveTo(Paths.get(s"/tmp/picture/$filename"), replace = true)
-      picture.ref.moveTo(new File(uploadPath+ uploadFolder + picture.filename), replace = true)
-
-      Ok("File uploaded")
+//      picture.ref.moveTo(Paths.get(s"/tmp/picture/$filename"), replace = true) //todo save to temp folder
+      val file = new File(uploadPath + uploadFolder + picture.filename)
+      picture.ref.moveTo(file, replace = true)
+      file.length
+      Ok(file.length.toString)
     }.getOrElse {
       Redirect(routes.ScalaFileUploadController.upload()).flashing(
         "error" -> "Missing file")
     }
   }
 
+  def upload2 = Action(parse.temporaryFile) { request =>
+    request.body.moveTo(Paths.get("/tmp/picture/uploaded"), replace = true)
+    Ok("File uploaded")
+  }
+
+  def upload3 = Action { request =>
+    request.body.asMultipartFormData//.moveTo(Paths.get("/tmp/picture/uploaded"), replace = true)
+    Ok("File uploaded")
+  }
 }
