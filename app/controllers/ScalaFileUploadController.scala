@@ -34,14 +34,4 @@ class ScalaFileUploadController @Inject()(cc: ControllerComponents) extends Abst
         "error" -> "Missing file")
     }
   }
-
-  def upload2 = Action(parse.temporaryFile) { request =>
-    request.body.moveTo(Paths.get("/tmp/picture/uploaded"), replace = true)
-    Ok("File uploaded")
-  }
-
-  def upload3 = Action { request =>
-    request.body.asMultipartFormData//.moveTo(Paths.get("/tmp/picture/uploaded"), replace = true)
-    Ok("File uploaded")
-  }
 }
