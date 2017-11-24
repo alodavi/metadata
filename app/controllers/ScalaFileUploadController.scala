@@ -26,6 +26,8 @@ class ScalaFileUploadController @Inject()(cc: ControllerComponents) extends Abst
 
 //      picture.ref.moveTo(Paths.get(s"/tmp/picture/$filename"), replace = true) //todo save to temp folder
       val file = new File(uploadPath + uploadFolder + picture.filename)
+//      val file = new File(s"/tmp/picture/$filename")
+
       picture.ref.moveTo(file, replace = true)
       file.length
       Ok(file.length.toString)
